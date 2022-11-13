@@ -1,10 +1,5 @@
 	.file	"printHelp.c"
 	.intel_syntax noprefix
-# GNU C17 (GCC) version 12.2.0 (x86_64-pc-linux-gnu)
-#	compiled by GNU C version 12.2.0, GMP version 6.2.1, MPFR version 4.1.0-p13, MPC version 1.2.1, isl version isl-0.25-GMP
-
-# GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
-# options passed: -masm=intel -mtune=generic -march=x86-64 -fno-asynchronous-unwind-tables -fno-jump-tables -fno-stack-protector -fno-exceptions
 	.text
 	.section	.rodata
 	.align 8
@@ -15,16 +10,14 @@
 	.globl	printHelp
 	.type	printHelp, @function
 printHelp:
-	push	rbp	#
-	mov	rbp, rsp	#,
-# ./printHelp.c:4:     printf("Опции командной строки\n"
-	lea	rax, .LC0[rip]	# tmp82,
-	mov	rdi, rax	#, tmp82
-	call	puts@PLT	#
-# ./printHelp.c:9: }
-	nop	
-	pop	rbp	#
-	ret	
+	push	rbp
+	mov	rbp, rsp
+	lea	rax, .LC0[rip]
+	mov	rdi, rax
+	call	puts@PLT
+	nop
+	pop	rbp
+	ret
 	.size	printHelp, .-printHelp
 	.ident	"GCC: (GNU) 12.2.0"
 	.section	.note.GNU-stack,"",@progbits

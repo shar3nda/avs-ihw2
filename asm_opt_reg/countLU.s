@@ -11,58 +11,58 @@ countLU:
 	.cfi_offset 6, -16
 	mov	rbp, rsp
 	.cfi_def_cfa_register 6
-	mov	QWORD PTR -24[rbp], rdi  # data
-	mov	DWORD PTR -28[rbp], esi  # length
-	mov	QWORD PTR -40[rbp], rdx  # lower
-	mov	QWORD PTR -48[rbp], rcx  # upper
-	mov	DWORD PTR -4[rbp], 0     # i
+	mov	r12, rdi  # data
+	mov	r13d, esi  # length
+	mov	r14, rdx  # lower
+	mov	r15, rcx  # upper
+	mov	ebx, 0     # i
 	jmp	.L2
 .L5:
-	mov	eax, DWORD PTR -4[rbp]
+	mov	eax, ebx
 	movsx	rdx, eax
-	mov	rax, QWORD PTR -24[rbp]
+	mov	rax, r12
 	add	rax, rdx
 	movzx	eax, BYTE PTR [rax]  # eax = data[i] (= al)
 	cmp	al, 64  # data[i] > 64 ?
 	jle	.L3
-	mov	eax, DWORD PTR -4[rbp]
+	mov	eax, ebx
 	movsx	rdx, eax
-	mov	rax, QWORD PTR -24[rbp]
+	mov	rax, r12
 	add	rax, rdx
 	movzx	eax, BYTE PTR [rax]  # eax = data[i] (= al)
 	cmp	al, 90  # data[i] <= 90 ?
 	jg	.L3
-	mov	rax, QWORD PTR -48[rbp]
+	mov	rax, r15
 	mov	eax, DWORD PTR [rax]
 	lea	edx, 1[rax]
-	mov	rax, QWORD PTR -48[rbp]
+	mov	rax, r15
 	mov	DWORD PTR [rax], edx  # *upper += 1
 	jmp	.L4  # continue
 .L3:
-	mov	eax, DWORD PTR -4[rbp]
+	mov	eax, ebx
 	movsx	rdx, eax
-	mov	rax, QWORD PTR -24[rbp]
+	mov	rax, r12
 	add	rax, rdx
 	movzx	eax, BYTE PTR [rax]  # eax = data[i] (= al)
 	cmp	al, 96  # data[i] > 96 ?
 	jle	.L4  # continue
-	mov	eax, DWORD PTR -4[rbp]
+	mov	eax, ebx
 	movsx	rdx, eax
-	mov	rax, QWORD PTR -24[rbp]
+	mov	rax, r12
 	add	rax, rdx
 	movzx	eax, BYTE PTR [rax]  # eax = data[i] (= al)
 	cmp	al, 122  # data[i] <= 122
 	jg	.L4  # continue
-	mov	rax, QWORD PTR -40[rbp]
+	mov	rax, r14
 	mov	eax, DWORD PTR [rax]
 	lea	edx, 1[rax]
-	mov	rax, QWORD PTR -40[rbp]
+	mov	rax, r14
 	mov	DWORD PTR [rax], edx  # *lower += 1
 .L4:
-	add	DWORD PTR -4[rbp], 1  # ++i
+	add	ebx, 1  # ++i
 .L2:
-	mov	eax, DWORD PTR -4[rbp]  # eax = i
-	cmp	eax, DWORD PTR -28[rbp]  # i < length ?
+	mov	eax, ebx  # eax = i
+	cmp	eax, r13d  # i < length ?
 	jl	.L5
 	nop
 	nop
