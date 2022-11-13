@@ -5,32 +5,54 @@
 
 extern void countLU(char *data, int length, int *lower, int *upper);
 extern struct options parseOptions(int argc, char *argv[]);
+extern void printHelp();
 
 int main(int argc, char *argv[]) {
-//    Опции командной строки
-//    -i - путь к входному файлу с данными  [ необходима проверка корректного открытия файлов
-//    -o - путь к файлу для вывода          ]
-//    -h, --help - справка
-//    -g - генерация случайных входных данных
-//    -r - количество повторений
-
     struct options opt = parseOptions(argc, argv);
-    FILE *input_file = NULL;
+    if (opt.show_help || !opt.valid) {
+        printHelp();
+        return 0;
+    }
+
+    FILE *infile_p = NULL;
     char buffer[1024];
     if (opt.input_mode == FROM_STDIN) {
-        input_file = stdin;
+        infile_p = stdin;
     } else if (opt.input_mode == FROM_FILE) {
-        input_file = fopen(opt.input_file, "r");
-        if (input_file == NULL) {
-            fprintf(stderr, "Error opening file");
+        infile_p = fopen(opt.input_file, "r");
+        if (infile_p == NULL) {
+            fprintf(stderr, "Error opening input file %s\n", opt.input_file);
             return 1;
         }
     }
+
     int lower = 0, upper = 0;
-    while (fread(buffer, 1, sizeof(buffer), input_file) > 0) {
-        countLU(buffer, strlen(buffer), &lower, &upper);
+    size_t size;
+    do {
+        size = fread(buffer, 1, 1024, infile_p);
+        countLU(buffer, size, &lower, &upper);
+    } while (size == sizeof buffer);
+
+    if (opt.input_mode == FROM_FILE) {
+        fclose(infile_p);
     }
-    printf("Lowercase: %i, uppercase: %i\n", lower, upper);
+
+    FILE *outfile_p = NULL;
+    if (opt.output_mode == TO_STDOUT) {
+        outfile_p = stdout;
+    } else if (opt.output_mode == TO_FILE) {
+        outfile_p = fopen(opt.output_file, "w");
+        if (outfile_p == NULL) {
+            fprintf(stderr, "Error opening output file %s\n", opt.output_file);
+            return 1;
+        }
+    }
+
+    fprintf(outfile_p, "Lowercase: %i, uppercase: %i\n", lower, upper);
+
+    if (opt.output_mode == TO_FILE) {
+        fclose(outfile_p);
+    }
 
     return 0;
 }

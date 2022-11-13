@@ -1,6 +1,4 @@
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,clion+all,cmake,c
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,clion+all,cmake,c
-
+venv
 ### C ###
 # Prerequisites
 *.d
@@ -34,7 +32,6 @@
 
 # Executables
 *.exe
-*.out
 *.app
 *.i*86
 *.x86_64
@@ -128,5 +125,3 @@ _deps
 # Ignore all local history of files
 .history
 .ionide
-
-# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,clion+all,cmake,c

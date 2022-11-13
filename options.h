@@ -6,7 +6,6 @@ struct options {
     enum {TO_STDOUT, TO_FILE} output_mode;
     char *input_file;
     char *output_file;
-    int run_cycle_count;
     int show_help;
     int valid;
 };
