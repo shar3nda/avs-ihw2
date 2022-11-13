@@ -6,4 +6,4 @@ gcc -masm=intel -fverbose-asm ./printHelp.c -S -o ./asm/printHelp.s
 gcc ./asm/countLU.s\
     ./asm/main.s\
     ./asm/parseOptions.s\
-    ./asm/printHelp.s -o 
+    ./asm/printHelp.s -o main
