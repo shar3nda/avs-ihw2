@@ -9,7 +9,7 @@
 ## Структура проекта
 * [asm](https://github.com/shar3nda/avs-ihw2/tree/main/asm) — код на ассемблере без флагов оптимизации, в котором **прокомментированы переменные** и операции над ними
 * [asm_opt](https://github.com/shar3nda/avs-ihw2/tree/main/asm) — оптимизированный с помощью флагов компиляции код на ассемблере
-* [asm_reg](https://github.com/shar3nda/avs-ihw2/tree/main/asm) — код на ассемблере без флагов оптимизации, в котором прокомментированы переменные и использованы регистры вместо некоторых локальных переменных.
+* [asm_reg](https://github.com/shar3nda/avs-ihw2/tree/main/asm) — код на ассемблере без флагов оптимизации, в котором **прокомментированы переменные** и использованы регистры вместо некоторых локальных переменных.
 * [scripts](https://github.com/shar3nda/avs-ihw2/tree/main/scripts) — скрипты для тестирования
     * [generate_tests.py](https://github.com/shar3nda/avs-ihw2/blob/main/scripts/generate_tests.py) — утилита для генерации тестов на Python
     * [run_tests.sh](https://github.com/shar3nda/avs-ihw2/blob/main/scripts/run_tests.sh) — bash-скрипт для прогона тестов. Использование: `run_tests.sh ./<executable_name>`
@@ -20,23 +20,27 @@
 * [main](https://github.com/shar3nda/avs-ihw2/blob/main/main) — исполняемый файл программы
 * [main_opt](https://github.com/shar3nda/avs-ihw2/blob/main/main_opt) — исполняемый файл программы, скомпилированный с оптимизациями
 * [main_reg](https://github.com/shar3nda/avs-ihw2/blob/main/main_reg) — исполняемый файл программы, переписанный на регистры
-* [tests_unoptimized.log](https://github.com/shar3nda/avs-ihw2/blob/main/tests_unoptimized.log) — логи тестирования неоптимизированного бинарника
-* [tests_optimized](https://github.com/shar3nda/avs-ihw2/blob/main/tests_optimized.log) — логи тестирования оптимизированного бинарника
-* [main.c](https://github.com/shar3nda/avs-ihw2/blob/main/main.c), [fillArray.c](https://github.com/shar3nda/avs-ihw2/blob/main/fillArray.c), [printArray.c](https://github.com/shar3nda/avs-ihw2/blob/main/printArray.c), [readArray.c](https://github.com/shar3nda/avs-ihw2/blob/main/readArray.c) — исходные файлы на языке C
+* [tests.log](https://github.com/shar3nda/avs-ihw2/blob/main/tests.log) — логи тестирования неоптимизированного бинарника
+* [tests_opt.log](https://github.com/shar3nda/avs-ihw2/blob/main/tests_opt.log) — логи тестирования оптимизированного бинарника
+* [tests_reg.log](https://github.com/shar3nda/avs-ihw2/blob/main/tests_reg.log) — логи тестирования бинарника с регистрами
+* [main.c](https://github.com/shar3nda/avs-ihw2/blob/main/main.c), [parseOptions.c](https://github.com/shar3nda/avs-ihw2/blob/main/parseOptions.c), [printHelp.c](https://github.com/shar3nda/avs-ihw2/blob/main/printHelp.c), [countLU.c](https://github.com/shar3nda/avs-ihw2/blob/main/countLU.c), [options.h](https://github.com/shar3nda/avs-ihw2/blob/main/options.h) — исходные файлы на языке C
 
 # Задания на 4 балла
 
 ## Использование программы
-* На первой строке вводится длина массива A.
-* На второй строке через пробел вводятся все элементы массива A.
-* На вывод поступают элементы массива B.
-* **Предполагается, что входные данные корректны и содержат последовательность целых чисел с хотя бы одним положительным элементом.**
+Программа поддерживает файловый и консольный ввод.
+
+Ключи командной строки:
+```shell
+-i <input_file> - путь к входному файлу с данными
+-o <output_file> - путь к файлу для вывода
+-h - справка
+```
+Если не указан путь к файлу, программа будет принимать ввод с консоли до `EOF` и выведет информацию о тексте в `stdout`.
 
 ## Результаты тестирования
-Логи тестирования находятся в файлах [tests_unoptimized.log](https://github.com/shar3nda/avs-ihw2/blob/main/tests_unoptimized.log) и [tests_optimized.log](https://github.com/shar3nda/avs-ihw2/blob/main/tests_optimized.log). Чтобы самостоятельно провести тестирование, необходимо выполнить `./scripts/run_tests.sh ./main` или `./scripts/run_tests.sh ./main_opt`.
-
-Отдельно протестированы крайние случаи.
-![Крайние случаи](images/edge_cases.png)
+Логи тестирования находятся в файлах [tests.log](https://github.com/shar3nda/avs-ihw2/blob/main/tests.log), [tests_opt.log](https://github.com/shar3nda/avs-ihw2/blob/main/tests_opt.log) и [tests_reg.log](https://github.com/shar3nda/avs-ihw2/blob/main/tests_reg.log). Чтобы самостоятельно провести тестирование, необходимо выполнить `./scripts/run_tests.sh ./main`,`./scripts/run_tests.sh ./main_opt`, `./scripts/run_tests.sh ./main_reg`.
+Тесты генерируются как последовательности ASCII-символов длиной от 500 до 5000 знаков.
 
 ## Опции компиляции
 Ассемблирование без оптимизаций:
@@ -51,45 +55,41 @@ gcc -masm=intel \
     -fno-stock-protector \
     -fno-exception \
     ./file.c \
-    -S -o ./asm/file_opt.s 
+    -S -o ./asm_opt/file_opt.s 
 ```
 После ассемблирования файлов по отдельности программа компилируется в исполняемый файл:
 ```sh
-gcc asm/main.s asm/fillArray.s asm/printArray.s asm/readArray.s -o main
+gcc asm/* -o main && scripts/run_tests.sh main > tests.log
 ```
 С оптимизациями:
 ```sh
-gcc asm/main_opt.s asm/fillArray_opt.s asm/printArray_opt.s asm/readArray_opt.s -o main_opt
+gcc asm_opt/* -o main_opt && scripts/run_tests.sh main_opt > tests_opt.log
+```
+С регистрами:
+```sh
+gcc asm_reg/* -o main_reg && scripts/run_tests.sh main_reg > tests_reg.log
 ```
 
 ## Оптимизация ассемблированных программ
-Помимо ключей командной строки были проведены следующие ручные оптимизации:
-* Убраны инструкции `cdqe` и `movsx rXX eXX`
-* Удалены лишние строчки в начале и в конце:
-    * `.file	"filename.c"`
-    * `.type	funcname, @function`
-    * `.ident	"GCC: (GNU) 12.2.0"`
-	* `.section	.note.GNU-stack,"",@progbits`
-* Убраны ненужные присваивания через регистр `rax`:
-    * `mov	eax, DWORD PTR [rax]; mov	esi, eax` -> `mov	esi, DWORD PTR [rax]`
-    * `lea	rax, .LC0[rip]; mov	rdi, rax` -> `lea	rdi, .LC0[rip]`
+Программы оптимизированы с помощью ключей командной строки, описанных выше.
 
 # Задания на 5 баллов
 
 ## Функции с параметрами
-В отдельных файлах реализованы следующие функции:
-* [readArray.c](https://github.com/shar3nda/avs-ihw2/blob/main/readArray.c) — считывает с `stdin` массив `a` и возвращает позицию последнего положительного элемента
-* [fillArray.c](https://github.com/shar3nda/avs-ihw2/blob/main/fillArray.c) — заполняет массив `b`
-* [printArray.c](https://github.com/shar3nda/avs-ihw2/blob/main/printArray.c) — печатает массив `b`
+В отдельных файлах реализованы следующие модули:
+* [parseOptions.c](https://github.com/shar3nda/avs-ihw2/blob/main/parseOptions.c) - парсинг опций командной строки и формирование структуры опций программы
+* [printHelp.c](https://github.com/shar3nda/avs-ihw2/blob/main/printHelp.c) - печать справки
+* [countLU.c](https://github.com/shar3nda/avs-ihw2/blob/main/countLU.c) - подсчет маленьких и больших букв в буфере
+* [options.h](https://github.com/shar3nda/avs-ihw2/blob/main/options.h) — описание структуры опций
 
 ## Локальные переменные
-В функциях используются локальные переменные, например, в [readArray.c](https://github.com/shar3nda/avs-ihw2/blob/main/readArray.c) используются `int index` для хранения позиции последнего положительного элемента и `int last_pos_found` как флаг того, что положительные элементы в `a` закончились.
+В функциях используются локальные переменные.
 
 ## Передача параметров и возвращаемые значения
-В [asm_commented](https://github.com/shar3nda/avs-ihw2/tree/main/asm_commented) комментариями отмечены передаваемые и возвращаемые значения в функциях.
+В [asm](https://github.com/shar3nda/avs-ihw2/tree/main/asm) комментариями отмечены передаваемые и возвращаемые значения в функциях.
 
 ## Связь между стеком и параметрами C
-В [asm_commented](https://github.com/shar3nda/avs-ihw2/tree/main/asm_commented) аналогично отмечено назначение регистров.
+В [asm](https://github.com/shar3nda/avs-ihw2/tree/main/asm) аналогично отмечено назначение регистров.
 
 Функции принимают аргументы 1-6 в регистры `rdi`, `rsi`, `rdx`, `rcx`, `r8` и `r9`, остальные в обратном порядке добавляются на стек. 
 
@@ -98,12 +98,27 @@ gcc asm/main_opt.s asm/fillArray_opt.s asm/printArray_opt.s asm/readArray_opt.s 
 # Задания на 6 баллов
 
 ## Рефакторинг и комментарии к регистрам
-Локальные переменные в [fillArray.c](https://github.com/shar3nda/avs-ihw2/blob/main/fillArray.c), [printArray.c](https://github.com/shar3nda/avs-ihw2/blob/main/printArray.c), [readArray.c](https://github.com/shar3nda/avs-ihw2/blob/main/readArray.c) убраны со стека и помещены в незатираемые регистры. Например, в [readArray.c](https://github.com/shar3nda/avs-ihw2/blob/main/readArray.c) произведены следующие замены:
-* `r13d = index = -1`
-* `r14d = last_pos_found = 0`
-* `r15d = i = 0`
+Локальные переменные в [countLU.c](https://github.com/shar3nda/avs-ihw2/blob/main/countLU.c) убраны со стека и помещены в незатираемые регистры:
+* `r12 = data`
+* `r13d = length`
+* `r14 = lower`
+* `r15 = upper`
+* `ebx = i`
 
 Комментарии к регистрам описаны.
 
 ## Тестовые прогоны
 Тесты произведены без ошибок, как и в предыдущих случаях.
+
+## Сопоставление размеров
+![Размеры программ](image.png)
+Переписанная на регистры программа обладает меньшим размером.
+
+# Задания на 7 баллов
+
+## Разделение программы
+Программа разделена на несколько единиц компиляции.
+## Ввод/вывод из файла
+Поддерживается ввод и вывод данных из файла. Аргументы задаются в командной строке и проверяются на корректность.
+## Тесты в файлах
+Файлы с автоматически сгенерированными тестами находятся в директории [tests](https://github.com/shar3nda/avs-ihw2/tree/main/tests).
